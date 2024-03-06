@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   scheduler:
-    image: ${IMAGE_NAME}/scheduler:${IMAGE_TAG}
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
     networks:
       - proxy
     environment:
