@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  scheduler:
+    image: ${IMAGE_NAME}/scheduler:${IMAGE_TAG}
+    networks:
+      - proxy
+    environment:
+      - OUTPUT_DIR=$OUTPUT_DIR
+    deploy:
+      placement:
+        constraints:
+          - "node.hostname==$NODE_CONSTRAINT"
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 60s
+      rollback_config:
+        parallelism: 1
+        delay: 15s
+        order: $ORDER
+      update_config:
+        parallelism: 1
+        delay: 15s
+        failure_action: rollback
+        order: $ORDER
+
+networks:
+  proxy:
+    external: true

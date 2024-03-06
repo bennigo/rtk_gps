@@ -1,0 +1,16 @@
+include:
+  - project: 'aut/ut-dev/infrastructure'
+    ref: main
+    file: 'templates/ci/docker/docker.yml'
+
+build-scheduler:
+  extends: .build
+  variables:
+    DOCKERFILE_PATH: ./Dockerfile
+    DOCKER_CONTEXT: .
+
+deploy-dev-internal:
+  extends: .deploy-dev-internal
+  variables:
+    NODE_CONSTRAINT: dockerswarm-d01
+    OUTPUT_DIR: /usr/src/app/media

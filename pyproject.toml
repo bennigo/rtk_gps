@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "rtk_gps"
+version = "0.1"
+authors = ["Benedikt Gunnar Ófeigsson <bgo@vedur.is>"]
+description = "working with real time GPS time series, plotting, analysing and event detection"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+]
+packages = [{include = "rtk_gps"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+matplotlib = ">=3.8.2"
+gtimes = ">=0.3.1"
+libnfs = "1.0.post4"
+schedule = ">=1.2.1"
+
+
+
+[tool.poetry.scripts]
+plotrtk = 'rtk_gps.plotrtk:main'
+rtk_scheduler = 'rtk_gps.scheduler:main'
+save_rtk_data = 'rtk_gps.save_rtk_data:main'
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[project.urls]
+"Homepage" = "https://gitlab.com/gpskings/gpslibrary.git"
