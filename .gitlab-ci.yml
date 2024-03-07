@@ -11,6 +11,3 @@ build-scheduler:
 
 deploy-dev-internal:
   extends: .deploy-dev-internal
-  variables:
-    NODE_CONSTRAINT: dockerswarm-d01
-    OUTPUT_DIR: /usr/src/app/media

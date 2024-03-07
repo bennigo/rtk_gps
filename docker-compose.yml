@@ -1,16 +1,11 @@
 version: "3.9"
 
 services:
-  rtk_gps:
+  scheduler:
     image: ${IMAGE_NAME}:${IMAGE_TAG}
     networks:
       - proxy
-    environment:
-      - OUTPUT_DIR=$OUTPUT_DIR
     deploy:
-      placement:
-        constraints:
-          - "node.hostname==$NODE_CONSTRAINT"
       replicas: 1
       restart_policy:
         condition: on-failure
