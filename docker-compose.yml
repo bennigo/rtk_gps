@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  scheduler:
+  rtk_gps:
     image: ${IMAGE_NAME}:${IMAGE_TAG}
     networks:
       - proxy
