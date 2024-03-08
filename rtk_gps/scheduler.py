@@ -1,11 +1,13 @@
 import logging
 import os
+import io
 import sys
 import time
 
 import libnfs
 from rtk_gps.rtk_gps import plot_rtk_neu
 import schedule
+import paramiko
 
 
 def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
@@ -14,23 +16,16 @@ def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
         exc_info=(exc_type, exc_value, exc_traceback),
     )
 
-
-def plot_schedule(nfs):
+def plot(nfs: libnfs.NFS, figure_path: str):
     """
     plots for the monitoring room
     """
     logging.info("Running plot schedule...")
-    # tmp = nfs.listdir("./")
-    # print(tmp)
 
     start = None
     end = None
     resample_str = "60s"
     figtype = "png"
-    figure_path = os.environ.get("OUTPUT_DIR", "fig_output")
-
-    if os.path.exists(figure_path) == False:
-        os.mkdir(figure_path)
 
     # baseline_list = ["GRIC-ELDC", "THOB-ELDC", "SKSH-ELDC", "SENG-ELDC"]
     baseline_list = [
@@ -94,6 +89,40 @@ def plot_schedule(nfs):
         figurepath=figure_path,
         figtype=figtype,
     )
+
+def program_schedule():
+    figure_path = os.environ.get("RTK_OUTPUT_DIR", "fig_output")
+    do_transfer = os.environ.get("RTK_DO_TRANSFER")
+
+    if os.path.exists(figure_path) == False:
+        os.mkdir(figure_path)
+
+    logging.info("Mounting NFS...")
+    nfs = libnfs.NFS("nfs://rtk.vedur.is/home/gpsops/rtklib-run/data")
+    plot(nfs, figure_path)
+
+    if do_transfer is not None:
+        private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
+        if not private_key_str:
+            raise RuntimeError("Missing SSH private key!")
+
+        private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
+
+        logging.info("Establishing SSH connection to CDN...")
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect("cdn.vedur.is", username="gpsops", pkey=private_key)
+
+        sftp = client.open_sftp()
+        remote_folder_path = "/data/gps/locations/volcanos/reykjanes/graphs/rtk/baseline_plots/"
+        
+        for fn in os.listdir(figure_path):
+            local_path = os.path.join(figure_path, fn)
+            remote_path = os.path.join(remote_folder_path, fn)
+            sftp.put(local_path, remote_path)
+            logging.info(f"{fn} transferred.")
+
+        client.close()
     
 def main():
     sys.excepthook = handle_uncaught_exception
@@ -103,14 +132,9 @@ def main():
         handlers=[logging.StreamHandler(sys.stdout)],
     )
 
-    logging.info("Mounting NFS...")
-    nfs = libnfs.NFS("nfs://rtk.vedur.is/home/gpsops/rtklib-run/data")
-    logging.info("Mounting finished.")
-
-    # main()
-    plot_schedule(nfs)#one run before we start the schedule
+    program_schedule()#one run before we start the schedule
     scheduler = schedule.Scheduler()
-    scheduler.every(5).minutes.at(":10").do(plot_schedule, nfs)
+    scheduler.every(5).minutes.at(":10").do(program_schedule)
 
     while True:
         scheduler.run_pending()
