@@ -58,6 +58,16 @@ def plot(nfs: libnfs.NFS, figure_path: str):
         figurepath=figure_path,
         figtype=figtype,
     )
+    plot_rtk_neu(
+        nfs,
+        baseline_list,
+        start=start,
+        end=end,
+        resample=resample_str,
+        special="6h",
+        figurepath=figure_path,
+        figtype=figtype,
+    )
 
     baseline_list = [
         "SENG-SUDV",
@@ -86,6 +96,16 @@ def plot(nfs: libnfs.NFS, figure_path: str):
         end=end,
         resample=resample_str,
         special="12h",
+        figurepath=figure_path,
+        figtype=figtype,
+    )
+    plot_rtk_neu(
+        nfs,
+        baseline_list,
+        start=start,
+        end=end,
+        resample=resample_str,
+        special="6h",
         figurepath=figure_path,
         figtype=figtype,
     )
