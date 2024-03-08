@@ -122,6 +122,7 @@ def program_schedule():
     plot(nfs, figure_path)
 
     if do_transfer is not None:
+        logging.info("Transfer is set to true.")
         private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
         if not private_key_str:
             raise RuntimeError("Missing SSH private key!")
