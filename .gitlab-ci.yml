@@ -11,10 +11,10 @@ build-scheduler:
 
 deploy-dev-internal:
   extends: .deploy-dev-internal
+  before_script:
+    - env
 
 deploy-prod-internal:
   extends: .deploy-prod-internal
   variables:
     RTK_SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY
-  before_script:
-    - env
