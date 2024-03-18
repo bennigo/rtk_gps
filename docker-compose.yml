@@ -6,7 +6,6 @@ services:
     networks:
       - proxy
     environment:
-      - RTK_SSH_PRIVATE_KEY=$RTK_SSH_PRIVATE_KEY
       - RTK_DO_TRANSFER=$RTK_DO_TRANSFER
     deploy:
       replicas: 1
