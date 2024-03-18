@@ -111,6 +111,8 @@ def plot(nfs: libnfs.NFS, figure_path: str):
     )
 
 def program_schedule():
+    logging.info("------------------------------------------")
+
     figure_path = "fig_output"
 
     if os.path.exists(figure_path) == False:
@@ -122,10 +124,12 @@ def program_schedule():
 
     logging.info("Transfer is set to true.")
     private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
+
     if not private_key_str:
         raise RuntimeError("Missing SSH private key!")
 
     private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
+
 
     logging.info("Establishing SSH connection to CDN...")
     client = paramiko.SSHClient()
@@ -144,6 +148,7 @@ def program_schedule():
         remote_path = os.path.join(remote_folder_path, fn)
         sftp.put(local_path, remote_path)
         logging.info(f"{fn} transferred.")
+
 
     client.close()
     
