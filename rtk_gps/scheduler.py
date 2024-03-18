@@ -27,88 +27,45 @@ def plot(nfs: libnfs.NFS, figure_path: str):
     resample_str = "60s"
     figtype = "png"
 
-    # baseline_list = ["GRIC-ELDC", "THOB-ELDC", "SKSH-ELDC", "SENG-ELDC"]
-    baseline_list = [
-        "SENG-ELDC",
-        "THOB-ELDC",
-        "SKSH-ELDC",
-        "HS02-ELDC",
-        "ASVE-ELDC",
-        "GEVK-ELDC",
-        "AUSV-ELDC",
+    baselines_list = [
+        ["GRIC-ELDC", "THOB-ELDC", "SKSH-ELDC", "SENG-ELDC"],
+        ["SENG-ELDC", "THOB-ELDC", "SKSH-ELDC", "HS02-ELDC", "ASVE-ELDC", "GEVK-ELDC", "AUSV-ELDC"],
+        ["SENG-SUDV", "HS02-SUDV", "THOB-SUDV", "ASVE-SUDV", "VMOS-SUDV", "GRVV-SUDV", "GEVK-SUDV"],
+        ["SENG-NAMC", "HS02-NAMC", "THOB-NAMC", "AUSV-NAMC", "GRVV-NAMC", "SKSH-NAMC"],
     ]
-    logging.info(f"Plotting {baseline_list}...")
-    plot_rtk_neu(
-        nfs,
-        baseline_list,
-        start=start,
-        end=end,
-        resample=resample_str,
-        special="twodays",
-        figurepath=figure_path,
-        figtype=figtype,
-    )
-    plot_rtk_neu(
-        nfs,
-        baseline_list,
-        start=start,
-        end=end,
-        resample=resample_str,
-        special="12h",
-        figurepath=figure_path,
-        figtype=figtype,
-    )
-    plot_rtk_neu(
-        nfs,
-        baseline_list,
-        start=start,
-        end=end,
-        resample=resample_str,
-        special="6h",
-        figurepath=figure_path,
-        figtype=figtype,
-    )
 
-    baseline_list = [
-        "SENG-SUDV",
-        "HS02-SUDV",
-        "THOB-SUDV",
-        "ASVE-SUDV",
-        "VMOS-SUDV",
-        "GRVV-SUDV",
-        "GEVK-SUDV",
-    ]
-    logging.info(f"Plotting {baseline_list}...")
-    plot_rtk_neu(
-        nfs,
-        baseline_list,
-        start=start,
-        end=end,
-        resample=resample_str,
-        special="twodays",
-        figurepath=figure_path,
-        figtype=figtype,
-    )
-    plot_rtk_neu(
-        nfs,
-        baseline_list,
-        start=start,
-        end=end,
-        resample=resample_str,
-        special="12h",
-        figurepath=figure_path,
-        figtype=figtype,
-    )
-    plot_rtk_neu(
-        nfs,
-        baseline_list,
-        start=start,
-        end=end,
-        resample=resample_str,
-        special="6h",
-        figurepath=figure_path,
-        figtype=figtype,
-    )
+    for baselines in baselines_list:
+        logging.info(f"Plotting {baselines}...")
+        plot_rtk_neu(
+            nfs,
+            baselines,
+            start=start,
+            end=end,
+            resample=resample_str,
+            special="twodays",
+            figurepath=figure_path,
+            figtype=figtype,
+        )
+        plot_rtk_neu(
+            nfs,
+            baseline_list,
+            start=start,
+            end=end,
+            resample=resample_str,
+            special="12h",
+            figurepath=figure_path,
+            figtype=figtype,
+        )
+        plot_rtk_neu(
+            nfs,
+            baseline_list,
+            start=start,
+            end=end,
+            resample=resample_str,
+            special="6h",
+            figurepath=figure_path,
+            figtype=figtype,
+        )
 
 def program_schedule():
     logging.info("------------------------------------------")
@@ -122,7 +79,6 @@ def program_schedule():
     nfs = libnfs.NFS(os.path.join(os.environ.get("RTK_NFS_HOST"), os.environ.get("RTK_NFS_PATH")))
     plot(nfs, figure_path)
 
-    logging.info("Transfer is set to true.")
     private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
 
     if not private_key_str:
