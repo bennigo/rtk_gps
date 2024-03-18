@@ -16,4 +16,5 @@ deploy-prod-internal:
   extends: .deploy-prod-internal
   variables:
     RTK_SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY
-    RTK_DO_TRANSFER: 'this is just here to check if it is defined or not'
+  before_script:
+    - env
