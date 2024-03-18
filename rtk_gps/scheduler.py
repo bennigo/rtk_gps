@@ -111,39 +111,41 @@ def plot(nfs: libnfs.NFS, figure_path: str):
     )
 
 def program_schedule():
-    figure_path = os.environ.get("RTK_OUTPUT_DIR", "fig_output")
-    do_transfer = os.environ.get("RTK_DO_TRANSFER")
+    figure_path = "fig_output"
 
     if os.path.exists(figure_path) == False:
         os.mkdir(figure_path)
 
     logging.info("Mounting NFS...")
-    nfs = libnfs.NFS("nfs://rtk.vedur.is/home/gpsops/rtklib-run/data")
+    nfs = libnfs.NFS(os.path.join(os.environ.get("RTK_NFS_HOST"), os.environ.get("RTK_NFS_PATH")))
     plot(nfs, figure_path)
 
-    if do_transfer is not None:
-        logging.info("Transfer is set to true.")
-        private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
-        if not private_key_str:
-            raise RuntimeError("Missing SSH private key!")
+    logging.info("Transfer is set to true.")
+    private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
+    if not private_key_str:
+        raise RuntimeError("Missing SSH private key!")
 
-        private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
+    private_key = paramiko.RSAKey.from_private_key(io.StringIO(private_key_str))
 
-        logging.info("Establishing SSH connection to CDN...")
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect("cdn.vedur.is", username="gpsops", pkey=private_key)
+    logging.info("Establishing SSH connection to CDN...")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(
+        os.environ.get("RTK_SFTP_HOST"),
+        username=os.environ.get("RTK_SFTP_USER"),
+        pkey=private_key
+    )
 
-        sftp = client.open_sftp()
-        remote_folder_path = "/data/gps/locations/volcanos/reykjanes/graphs/rtk/baseline_plots/"
-        
-        for fn in os.listdir(figure_path):
-            local_path = os.path.join(figure_path, fn)
-            remote_path = os.path.join(remote_folder_path, fn)
-            sftp.put(local_path, remote_path)
-            logging.info(f"{fn} transferred.")
+    sftp = client.open_sftp()
+    remote_folder_path = os.environ.get("RTK_SFTP_PATH")
+    
+    for fn in os.listdir(figure_path):
+        local_path = os.path.join(figure_path, fn)
+        remote_path = os.path.join(remote_folder_path, fn)
+        sftp.put(local_path, remote_path)
+        logging.info(f"{fn} transferred.")
 
-        client.close()
+    client.close()
     
 def main():
     sys.excepthook = handle_uncaught_exception
