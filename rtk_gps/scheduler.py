@@ -5,7 +5,7 @@ import sys
 import time
 
 import libnfs
-from rtk_gps import plot_rtk_neu
+from rtk_gps.rtk_gps import plot_rtk_neu
 import schedule
 import paramiko
 
@@ -85,7 +85,7 @@ def program_schedule():
     logging.info("Mounting NFS...")
     NFS_HOST = os.environ.get("RTK_NFS_HOST")
     NFS_PATH = os.environ.get("RTK_NFS_PATH")
-    try
+    try:
         nfs = libnfs.NFS(os.path.join(NFS_HOST, NFS_PATH))
         plot(nfs, figure_path)
     except:
