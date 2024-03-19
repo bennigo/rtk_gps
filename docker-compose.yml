@@ -6,14 +6,14 @@ services:
     networks:
       - proxy
     environment:
-      - RTK_SSH_PRIVATE_KEY=$RTK_SSH_PRIVATE_KEY
-      - RTK_NFS_HOST=$RTK_NFS_HOST
-      - RTK_NFS_PATH=$RTK_NFS_PATH
-      - RTK_SFTP_HOST=$RTK_SFTP_HOST
-      - RTK_SFTP_PATH=$RTK_SFTP_PATH
-      - RTK_SFTP_USER=$RTK_SFTP_USER
+      - RTK_SSH_PRIVATE_KEY=${RTK_SSH_PRIVATE_KEY}
+      - RTK_NFS_HOST=${RTK_NFS_HOST}
+      - RTK_NFS_PATH=${RTK_NFS_PATH}
+      - RTK_SFTP_HOST=${RTK_SFTP_HOST}
+      - RTK_SFTP_PATH=${RTK_SFTP_PATH}
+      - RTK_SFTP_USER=${RTK_SFTP_USER}
     deploy:
-      replicas: 1
+      replicas: $REPLICAS
       restart_policy:
         condition: on-failure
         delay: 5s
