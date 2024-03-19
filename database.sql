@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS rtk_one_min;
 CREATE TABLE rtk_one_min ( 
     time TIMESTAMP(6) WITHOUT TIME ZONE NOT NULL, 
     base  CHARACTER VARYING(4) NOT NULL, 
@@ -14,6 +15,8 @@ CREATE TABLE rtk_one_min (
     sdue  REAL, 
     PRIMARY KEY (base, rover, time) 
 );
+
+SELECT create_hypertable("rtk_one_min", "time");
 
 COMMENT ON TABLE rtk_one_min IS 'One minute resamples of RTK(Real-time kinematic positioning) baselines.';
 COMMENT ON COLUMN rtk_one_min.time IS 'Time of observation';
