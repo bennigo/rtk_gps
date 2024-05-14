@@ -11,7 +11,7 @@ import libnfs
 import pandas as pd
 from gtimes.timefunc import datepathlist
 
-from rtk_gps.rtk_gps import open_datafile
+from rtk_gps import open_datafile
 
 # from pathlib import Path
 
@@ -63,10 +63,23 @@ def rtk_write_archive(
     """
     read in raw rtk baseline data and writing median to a file
     """
-    filelist = [
-        os.path.join(baseline, f"{baseline}{date}0000b.pos") for date in date_list
-    ]
-    stat_df = open_datafile(nfs, filelist, file_type="", filt=[5])
+
+    if type(nfs) is libnfs.NFS:
+        filelist = [
+            os.path.join(baseline, f"{baseline}{date}0000b.pos") for date in date_list
+        ]
+    else:
+        filelist = [
+            os.path.join(nfs, baseline, f"{baseline}{date}0000b.pos")
+            for date in date_list
+        ]
+        nfs = None
+    # filelist = [
+    #     os.path.join(baseline, f"{baseline}{date}0000b.pos") for date in date_list
+    # ]
+    
+    # stat_df = open_datafile(nfs, filelist, file_type="", filt=[5])
+    stat_df = open_datafile(filelist, nfs=nfs, file_type="", filt=[5])
     if not len(stat_df.index) > 0:
         return 1
 
@@ -133,21 +146,21 @@ def main():
         config = configparser.ConfigParser()
         configpath = os.path.join(os.path.join(projectdir, "config"), "config.ini")
         config.read(configpath)
-        nfs = config["Paths"]["filepath"]
+        nfs = config["paths"]["filepath"]
         baselines = os.listdir(nfs)
 
     strf = "%Y%m%d"
-    end = dt.now()
-    start = end - td(days=2)
-    # start = dt(year=2023, month=11, day=8)
+    # end = dt.now()
+    end = dt(year=2024, month=3, day=18)
+    start = end - td(days=5)
     # start = dt(year=2024, month=1, day=1)
-    resample = "5min"
+    resample = "1min"
     file_frequency = "1d"
 
     r = re.compile(r"\S+-\S+")
     baseline_list = list(filter(r.match, baselines))  # Read Note below
     # baseline_list = ["THOB-ELDC", "SENG-ELDC", "SKSH-ELDC", "ORFC-ELDC"]
-    # baseline_list = ["ODDF-ELDC"]
+    # baseline_list = ["THOB-ELDC"]
     logging.debug("%s", baseline_list)
 
     if not isdir(filepath):
@@ -167,10 +180,10 @@ def main():
     start_time = time.perf_counter()
     for baseline in baseline_list:
         print(baseline)
-        rtk_write_median(baseline, nfs, date_list, resample, use_columns, filepath)
-        # rtk_write_archive(
-        # baseline, resample, date_list, frequency_list, use_columns, nfs, filepath
-        # )
+        # rtk_write_median(baseline, nfs, date_list, resample, use_columns, filepath)
+        rtk_write_archive(
+        baseline, resample, date_list, frequency_list, use_columns, nfs, filepath
+        )
     end_time = time.perf_counter()
     logging.warning("Total Run time: %f min", (end_time - start_time)/60.0)
 

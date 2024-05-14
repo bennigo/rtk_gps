@@ -9,6 +9,7 @@ import libnfs
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
+import matplotlib.ticker as mticker
 import pandas as pd
 from gtimes.timefunc import datepathlist
 from matplotlib.ticker import AutoMinorLocator
@@ -160,7 +161,7 @@ def plot_rtk_neu(
         special = None
 
     dstr = "%Y%m%d-%H:%M"
-    date_list = list(set(datepathlist("%Y%m%d", "12h", start, end, closed="both")))
+    date_list = list(set(datepathlist("%Y%m%d", "2h", start, end, closed="both")))
     now_string = end.strftime("%Y-%m-%d %H:%M:%S")
 
     components = ["n-baseline", "e-baseline", "u-baseline"]
@@ -200,6 +201,7 @@ def plot_rtk_neu(
                 if axs[i].get_ylim()[0] < ymin[i]:
                     ymin[i] = axs[i].get_ylim()[0]
 
+    # plt.yticks(fontsize=14)
     for i, ylabel in zip(range(0, 3), ylabels):
 
         trans_offset = mtransforms.offset_copy(
@@ -209,7 +211,12 @@ def plot_rtk_neu(
         axs[i].grid(which="minor", color="#EEEEEE", linestyle=":", linewidth=1.5)
         axs[i].xaxis.set_minor_locator(AutoMinorLocator())
         axs[i].yaxis.set_minor_locator(AutoMinorLocator())
-        axs[i].set_ylabel("{} [cm]".format(ylabel), fontsize=14)
+
+        axs[i].set_ylabel("{} [cm]".format(ylabel), fontsize=16)
+        # axs[i].xaxis.set_major_locator(mticker.MaxNLocator())
+        # ticks_loc = axs[i].get_xticks().tolist()
+        # axs[i].xaxis.set_major_locator(mticker.FixedLocator(ticks_loc))
+        axs[i].tick_params(axis='both', labelsize=14)
         axs[i].axvline(x=end, color="green", zorder=2, linewidth=2)
         axs[i].text(
             end,
@@ -219,10 +226,10 @@ def plot_rtk_neu(
             rotation="vertical",
             verticalalignment="center",
             color="green",
-            fontsize=14,
+            fontsize=18,
         )
 
-    axs[0].legend(loc="lower left")
+    axs[0].legend(loc="lower left", fontsize=16)
     # inpLogo(fig, Logo="/home/bgo/work/documents/logos/VI_Two_Line_Blue.png")
 
     if special:

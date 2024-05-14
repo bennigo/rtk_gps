@@ -32,6 +32,7 @@ def plot(nfs: libnfs.NFS, figure_path: str):
         ["SENG-ELDC", "THOB-ELDC", "SKSH-ELDC", "HS02-ELDC", "ASVE-ELDC", "GEVK-ELDC", "AUSV-ELDC"],
         ["SENG-SUDV", "HS02-SUDV", "THOB-SUDV", "ASVE-SUDV", "VMOS-SUDV", "GRVV-SUDV", "GEVK-SUDV"],
         ["SENG-NAMC", "HS02-NAMC", "THOB-NAMC", "AUSV-NAMC", "GRVV-NAMC", "SKSH-NAMC"],
+        ["VMOS-AUSV", "GEVK-AUSV", "GRVV-AUSV", "GRVM-AUSV", "SKSH-AUSV", "THOB-AUSV", "ELDC-AUSV"],
     ]
 
     for baselines in baselines_list:
