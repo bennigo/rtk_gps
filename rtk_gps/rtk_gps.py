@@ -8,11 +8,36 @@ from datetime import timedelta as td
 import libnfs
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.transforms as mtransforms
 import matplotlib.ticker as mticker
+import matplotlib.transforms as mtransforms
 import pandas as pd
 from gtimes.timefunc import datepathlist
 from matplotlib.ticker import AutoMinorLocator
+
+
+# from rtk_gps.rtk_gps import open_datafile, inpLogo
+def inpLogo(fig, Logo=None):
+    """ """
+
+    import matplotlib.image as image
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    # asp = 0.6948051948051948
+    # asp = 0.93 # Image aspect ratio
+    asp = 0.1  # Image aspect ratio
+    xlen = 0.3
+    ylen = xlen * asp
+
+    xpos = fig.axes[0].get_position().xmin - 0.052
+    ypos = (fig.axes[0].get_position().ymax) - 0.033
+
+    im = plt.imread(Logo)
+    # im[np.all(im[:,:,:3] == [0, 0, 0], axis=-1)] = [255, 255 ,255, 255]
+    aximage = fig.add_axes(
+        [xpos, ypos, xlen, ylen], frameon=False, xticks=[], yticks=[]
+    )
+    aximage.imshow(im, alpha=0.7, interpolation="none")
 
 
 def open_datafile(filelist, nfs, file_type="rtk_coordinate", filt=[5]):
@@ -113,7 +138,9 @@ def open_datafile(filelist, nfs, file_type="rtk_coordinate", filt=[5]):
             df = pd.concat([df, tmp_df])
 
     r_end = time.perf_counter()
-    logging.warning("Run time: %f s for reading in data in %s", r_end - r_start, filelist)
+    logging.warning(
+        "Run time: %f s for reading in data in %s", r_end - r_start, filelist
+    )
 
     df.index = pd.to_datetime(df.index)  # - timedelta(seconds=18)
     df = df.dropna()
@@ -138,8 +165,6 @@ def plot_rtk_neu(
     Plot north, east, up component of a few rtk GPS baselines
     with common base station
     """
-
-    # from rtk_gps.rtk_gps import open_datafile, inpLogo
 
     figend = ""
     if end is None:
@@ -203,7 +228,6 @@ def plot_rtk_neu(
 
     # plt.yticks(fontsize=14)
     for i, ylabel in zip(range(0, 3), ylabels):
-
         trans_offset = mtransforms.offset_copy(
             axs[i].transData, fig=fig, x=0.15, y=2.252756, units="inches"
         )
@@ -216,7 +240,7 @@ def plot_rtk_neu(
         # axs[i].xaxis.set_major_locator(mticker.MaxNLocator())
         # ticks_loc = axs[i].get_xticks().tolist()
         # axs[i].xaxis.set_major_locator(mticker.FixedLocator(ticks_loc))
-        axs[i].tick_params(axis='both', labelsize=14)
+        axs[i].tick_params(axis="both", labelsize=14)
         axs[i].axvline(x=end, color="green", zorder=2, linewidth=2)
         axs[i].text(
             end,
@@ -229,20 +253,24 @@ def plot_rtk_neu(
             fontsize=18,
         )
 
-    axs[0].legend(loc="lower left", fontsize=16)
-    # inpLogo(fig, Logo="/home/bgo/work/documents/logos/VI_Two_Line_Blue.png")
+    # inpLogo(fig, Logo="VI_Two_Line_Blue.png")
 
     if special:
         if figend == "now":
             fig_name = f"{figurepath}/rtk_{baseline_list[0]}_{special}.{figtype}"
+            title = f"{baseline_list[0]} {special}"
         else:
             end = end.strftime(dstr)
             fig_name = f"{figurepath}/rtk_{baseline_list[0]}_{special}-{end}.{figtype}"
+            title = f"{baseline_list[0]} {special}-{end}"
 
     else:
         start = start.strftime(dstr)
         fig_name = f"{figurepath}/rtk_{baseline_list[0]}_{start}-{end}.{figtype}"
+        title = f"{baseline_list[0]} {start}-{end}"
 
+    axs[0].set_title(title, fontdict={"fontsize": 30, "verticalalignment": "bottom"})
+    axs[0].legend(loc="lower left", fontsize=16)
     fig.savefig(fig_name)
     plt.close(fig=fig)
     logging.info(f"{fig_name} created")
