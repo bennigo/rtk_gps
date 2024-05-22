@@ -26,11 +26,11 @@ def inpLogo(fig, Logo=None):
     # asp = 0.6948051948051948
     # asp = 0.93 # Image aspect ratio
     asp = 0.1  # Image aspect ratio
-    xlen = 0.3
+    xlen = 0.4
     ylen = xlen * asp
 
-    xpos = fig.axes[0].get_position().xmin - 0.052
-    ypos = (fig.axes[0].get_position().ymax) - 0.033
+    xpos = fig.axes[0].get_position().xmin - 0.096
+    ypos = (fig.axes[0].get_position().ymax) - 0.043
 
     im = plt.imread(Logo)
     # im[np.all(im[:,:,:3] == [0, 0, 0], axis=-1)] = [255, 255 ,255, 255]
@@ -253,7 +253,7 @@ def plot_rtk_neu(
             fontsize=18,
         )
 
-    # inpLogo(fig, Logo="VI_Two_Line_Blue.png")
+    inpLogo(fig, Logo="/home/bgo/work/projects/gps/gps-rauntimaplot/rtk_gps/extra/logo/VI_Two_Line_Blue.png")
 
     if special:
         if figend == "now":

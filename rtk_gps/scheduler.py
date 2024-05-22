@@ -72,9 +72,13 @@ def program_schedule():
     logging.info("------------------------------------------")
 
     figure_path = "fig_output"
+    logo_file = "extra/logo/VI_Two_Line_Blue.png"
 
     if os.path.exists(figure_path) == False:
         os.mkdir(figure_path)
+
+    if os.path.exists(logo_file) == False:
+        logo_file = ""
 
     private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
 
