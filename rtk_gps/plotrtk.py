@@ -33,6 +33,9 @@ def main():
 
     file_path = Path(config["Paths"]["filepath"])
     figure_path = Path(os.path.join(projectdir, config["Paths"]["figurepath"]))
+
+    logo = str(Path(os.path.join(projectdir, config["Paths"]["logopath"]), config["Paths"]["logo"]))
+
     if os.path.exists(figure_path) == False:
         os.mkdir(figure_path)
 
@@ -86,6 +89,15 @@ def main():
         help="For routine plots: one day, two days, three days and a week",
     )
     parser.add_argument(
+        "-l",
+        "--logo",
+        type=str,
+        nargs="?",
+        default=logo,
+        const="",
+        help="Add logo",
+    )
+    parser.add_argument(
         "-d",
         "--figDir",
         type=str,
@@ -109,6 +121,7 @@ def main():
     baseline_list = args.Stations
     special = args.special
     figtype = args.save
+    logo = args.logo
 
     if args.start:  # start the plot at
         start = dt.strptime(args.start, dstr)
@@ -125,6 +138,7 @@ def main():
         resample=resample_str,
         special=special,
         figurepath=figure_path,
+        logo=logo,
         figtype=figtype,
     )
 

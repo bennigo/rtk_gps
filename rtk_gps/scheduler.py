@@ -16,7 +16,7 @@ def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
         exc_info=(exc_type, exc_value, exc_traceback),
     )
 
-def plot(nfs: libnfs.NFS, figure_path: str):
+def plot(nfs: libnfs.NFS, figure_path: str, logo: str = ""):
     """
     plots for the monitoring room
     """
@@ -45,6 +45,7 @@ def plot(nfs: libnfs.NFS, figure_path: str):
             resample=resample_str,
             special="twodays",
             figurepath=figure_path,
+            logo=logo,
             figtype=figtype,
         )
         plot_rtk_neu(
@@ -55,6 +56,7 @@ def plot(nfs: libnfs.NFS, figure_path: str):
             resample=resample_str,
             special="12h",
             figurepath=figure_path,
+            logo=logo,
             figtype=figtype,
         )
         plot_rtk_neu(
@@ -65,6 +67,7 @@ def plot(nfs: libnfs.NFS, figure_path: str):
             resample=resample_str,
             special="6h",
             figurepath=figure_path,
+            logo=logo,
             figtype=figtype,
         )
 
@@ -76,9 +79,6 @@ def program_schedule():
 
     if os.path.exists(figure_path) == False:
         os.mkdir(figure_path)
-
-    if os.path.exists(logo_file) == False:
-        logo_file = ""
 
     private_key_str = os.environ.get("RTK_SSH_PRIVATE_KEY")
 

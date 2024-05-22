@@ -1,5 +1,6 @@
 import logging
 import os
+from os.path import exists
 import tempfile
 import time
 from datetime import datetime as dt
@@ -16,28 +17,33 @@ from matplotlib.ticker import AutoMinorLocator
 
 
 # from rtk_gps.rtk_gps import open_datafile, inpLogo
-def inpLogo(fig, Logo=None):
+def inpLogo(fig, logo=""):
     """ """
 
     import matplotlib.image as image
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # asp = 0.6948051948051948
-    # asp = 0.93 # Image aspect ratio
-    asp = 0.1  # Image aspect ratio
-    xlen = 0.4
-    ylen = xlen * asp
+    if logo == "":
+        logging.warning("No image file for logo provited")
+    elif not exists(logo):
+        logging.warning("Image file %s does not exist", logo)
+    else:
+        # asp = 0.6948051948051948
+        # asp = 0.93 # Image aspect ratio
+        asp = 0.1  # Image aspect ratio
+        xlen = 0.4
+        ylen = xlen * asp
 
-    xpos = fig.axes[0].get_position().xmin - 0.096
-    ypos = (fig.axes[0].get_position().ymax) - 0.043
+        xpos = fig.axes[0].get_position().xmin - 0.096
+        ypos = (fig.axes[0].get_position().ymax) - 0.043
 
-    im = plt.imread(Logo)
-    # im[np.all(im[:,:,:3] == [0, 0, 0], axis=-1)] = [255, 255 ,255, 255]
-    aximage = fig.add_axes(
-        [xpos, ypos, xlen, ylen], frameon=False, xticks=[], yticks=[]
-    )
-    aximage.imshow(im, alpha=0.7, interpolation="none")
+        im = plt.imread(logo)
+        # im[np.all(im[:,:,:3] == [0, 0, 0], axis=-1)] = [255, 255 ,255, 255]
+        aximage = fig.add_axes(
+            [xpos, ypos, xlen, ylen], frameon=False, xticks=[], yticks=[]
+        )
+        aximage.imshow(im, alpha=0.7, interpolation="none")
 
 
 def open_datafile(filelist, nfs, file_type="rtk_coordinate", filt=[5]):
@@ -159,6 +165,7 @@ def plot_rtk_neu(
     resample="60s",
     special="twodays",
     figurepath=None,
+    logo="",
     figtype="png",
 ):
     """
@@ -253,7 +260,7 @@ def plot_rtk_neu(
             fontsize=18,
         )
 
-    inpLogo(fig, Logo="/home/bgo/work/projects/gps/gps-rauntimaplot/rtk_gps/extra/logo/VI_Two_Line_Blue.png")
+    inpLogo(fig, logo)
 
     if special:
         if figend == "now":
