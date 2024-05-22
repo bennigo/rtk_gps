@@ -92,7 +92,7 @@ def program_schedule():
     NFS_PATH = os.environ.get("RTK_NFS_PATH")
     try:
         nfs = libnfs.NFS(os.path.join(NFS_HOST, NFS_PATH))
-        plot(nfs, figure_path)
+        plot(nfs, figure_path, logo=logo_file)
     except:
         logging.error(f"Failed to mount NFS at {NFS_HOST}")
         return
