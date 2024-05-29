@@ -28,11 +28,16 @@ def plot(nfs: libnfs.NFS, figure_path: str, logo: str = ""):
     figtype = "png"
 
     baselines_list = [
-        ["ORFC-ELDC", "THOB-ELDC", "SKSH-ELDC", "SENG-ELDC"],
-        ["SENG-ELDC", "THOB-ELDC", "SKSH-ELDC", "HS02-ELDC", "ASVE-ELDC", "GEVK-ELDC", "AUSV-ELDC"],
-        ["SENG-SUDV", "HS02-SUDV", "THOB-SUDV", "ASVE-SUDV", "VMOS-SUDV", "GRVV-SUDV", "GEVK-SUDV"],
-        ["SENG-NAMC", "HS02-NAMC", "THOB-NAMC", "AUSV-NAMC", "GRVV-NAMC", "SKSH-NAMC"],
-        ["VMOS-AUSV", "GEVK-AUSV", "GRVV-AUSV", "GRVM-AUSV", "SKSH-AUSV", "THOB-AUSV", "ELDC-AUSV"],
+        # ["ORFC-ELDC", "THOB-ELDC", "SKSH-ELDC", "SENG-ELDC"],
+        ["ORFC-ELDC", "SKSH-ELDC", "SENG-ELDC"],
+        # ["SENG-ELDC", "THOB-ELDC", "SKSH-ELDC", "HS02-ELDC", "ASVE-ELDC", "GEVK-ELDC", "AUSV-ELDC"],
+        ["SENG-ELDC", "SKSH-ELDC", "HS02-ELDC", "ASVE-ELDC", "GEVK-ELDC", "AUSV-ELDC"],
+        # ["SENG-SUDV", "HS02-SUDV", "THOB-SUDV", "ASVE-SUDV", "VMOS-SUDV", "GRVV-SUDV", "GEVK-SUDV"],
+        ["SENG-SUDV", "HS02-SUDV", "ASVE-SUDV", "VMOS-SUDV", "GRVV-SUDV", "GEVK-SUDV"],
+        # ["SENG-NAMC", "HS02-NAMC", "THOB-NAMC", "AUSV-NAMC", "GRVV-NAMC", "SKSH-NAMC"],
+        ["SENG-NAMC", "HS02-NAMC", "AUSV-NAMC", "GRVV-NAMC", "SKSH-NAMC"],
+        # ["VMOS-AUSV", "GEVK-AUSV", "GRVV-AUSV", "GRVM-AUSV", "SKSH-AUSV", "THOB-AUSV", "ELDC-AUSV"],
+        ["VMOS-AUSV", "GEVK-AUSV", "GRVV-AUSV", "GRVM-AUSV", "SKSH-AUSV", "ELDC-AUSV"],
     ]
 
     for baselines in baselines_list:
