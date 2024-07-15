@@ -11,7 +11,7 @@ from pathlib import Path
 
 import libnfs
 import matplotlib.pyplot as plt
-from numpy import who
+# from numpy import who
 
 from rtk_gps.rtk_gps import plot_rtk_neu
 
